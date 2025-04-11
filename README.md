@@ -14,11 +14,11 @@ cd certbot/
 If successful, new certs will be fetched to:
 
 ```bash
-ls -al ~/certbot/live/${DOMAIN_NAME}/
+ls -al ~/certbot/generated/live/${DOMAIN_NAME}/
 ```
 
 And new nginx config will be generated with default http and https settings:
 
 ```bash
-cat ~/certbot/nginx.conf
+cat ~/certbot/generated/nginx.conf
 ```

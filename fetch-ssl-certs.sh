@@ -9,7 +9,8 @@ DOMAIN_NAME=$1
 SERVICE_PORT=$2
 
 # Generate configs for challenge server
-cat << EOF > nginx-challenge.conf
+mkdir generated/
+cat << EOF > generated/nginx-challenge.conf
 events {
   worker_connections 16;
 }
@@ -39,11 +40,11 @@ docker compose run --rm \
     || echo "Failed to obtain or renew ssl certs"
 docker compose down challenge
 
-# Cleanup generated files
-rm -f nginx-challenge.conf
+# Cleanup challenge server configs which are no longer needed
+rm -f generated/nginx-challenge.conf
 
 # Generate new nginx config
-cat << EOF > nginx.conf
+cat << EOF > generated/nginx.conf
 events {
   worker_connections 512;
   multi_accept on;
