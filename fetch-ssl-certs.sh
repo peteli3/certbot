@@ -8,6 +8,11 @@ fi
 DOMAIN_NAME=$1
 SERVICE_PORT=$2
 
+if lsof -i :80 > /dev/null; then
+    echo "Port 80 is already in use. Please free up port 80 and try again."
+    exit 1
+fi
+
 # Generate configs for challenge server
 mkdir generated/
 cat << EOF > generated/nginx-challenge.conf
