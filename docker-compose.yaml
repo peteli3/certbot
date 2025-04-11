@@ -1,0 +1,19 @@
+version: "3.9"
+
+services:
+  challenge:
+    image: nginx:latest
+    platform: linux/amd64
+    ports:
+      - "80:80"
+    volumes:
+      - "./nginx-challenge.conf:/etc/nginx/nginx.conf:ro"
+      - "./www/:/var/www/certbot/:ro"
+    restart: unless-stopped
+
+  certbot:
+    image: certbot/certbot:latest
+    platform: linux/amd64
+    volumes:
+      - "./:/etc/letsencrypt/:rw"
+      - "./www/:/var/www/certbot/:rw"
