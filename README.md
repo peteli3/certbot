@@ -2,15 +2,15 @@
 Containerized certbot with helpers for easy cert mangement with LetsEncrypt
 
 Intended for use on Linux platforms running apps that want https support.
-Clone repository onto machine and run the fetch script. LetsEncrypt may prompt you to enter an email address and answer some yes/no questions:
+Clone repository onto machine and run the provision script. LetsEncrypt may prompt you to enter an email address and answer some yes/no questions:
 
 ```bash
 git clone https://github.com/peteli3/certbot.git ~/certbot
 cd ~/certbot
-./fetch-ssl-certs.sh $DOMAIN_NAME $SERVICE_PORT
+./provision-new-certs.sh $DOMAIN_NAME $SERVICE_PORT
 ```
 
-If successful, new certs will be fetched to:
+If successful, new certs will be written to disk at:
 
 ```bash
 ls -al ~/certbot/generated/live/${DOMAIN_NAME}/
@@ -46,7 +46,7 @@ When certs are nearing expiration, renew and restart app:
 
 ```bash
 pushd ~/certbot
-docker compose run --rm certbot renew
+./renew-certs.sh
 popd
 docker compose restart
 ```
