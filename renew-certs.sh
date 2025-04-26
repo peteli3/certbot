@@ -5,4 +5,10 @@ if [ ! -d ./generated/ ]; then
     exit 1
 fi
 
+echo
+echo "***** Renewing certs - $(date) *****"
+
 docker compose run --rm certbot renew --force-renewal
+
+echo "***** Completed renewal - $(date) *****"
+echo

@@ -1,8 +1,8 @@
 # certbot
 Containerized certbot with helpers for easy cert mangement with LetsEncrypt
 
-Intended for use on Linux platforms running apps that want https support.
-Clone repository onto machine and run the provision script. LetsEncrypt may prompt you to enter an email address and answer some yes/no questions:
+For use on Linux platforms running apps that want https support.
+Clone repo onto machine and run the provision script. LetsEncrypt may prompt you to enter an email address and answer some yes/no questions:
 
 ```bash
 git clone https://github.com/peteli3/certbot.git ~/certbot
@@ -11,19 +11,18 @@ cd ~/certbot
 ```
 
 If successful, new certs will be written to disk at:
-
 ```bash
 ls -al ~/certbot/generated/live/${DOMAIN_NAME}/
 ```
 
 And new nginx config will be generated with default http and https settings:
-
 ```bash
 cat ~/certbot/generated/nginx.conf
 ```
 
-Include a nginx proxy service with the generated certs in the docker-compose.yaml for app that wants https support:
+## Enable https connections via nginx
 
+Include a nginx proxy service with the generated certs in the docker-compose.yaml for app that wants https support:
 ```bash
 services:
   # ... other services
@@ -42,11 +41,35 @@ services:
   # ... other services
 ```
 
-When certs are nearing expiration, renew and restart app:
+## Automatic certificate renewal
 
+Assuming your app docker-compose is in $HOME.
+If not, edit the line with `docker compose restart`.
+
+Append to existing crontab:
 ```bash
-pushd ~/certbot
+(crontab -l; \
+    echo "# Added by certbot"; \
+    echo "30 2 1 * * cd $HOME/certbot && ./renew-certs.sh >> $HOME/certbot/renewal.log 2>&1"; \
+    echo "00 3 * * * docker compose restart") \
+    | crontab -
+```
+
+Replace existing crontab:
+```bash
+(echo "# Added by certbot"; \
+    echo "30 2 1 * * cd $HOME/certbot && ./renew-certs.sh >> $HOME/certbot/renewal.log 2>&1";
+    echo "00 3 * * * docker compose restart") \
+    | crontab -
+```
+
+## Manual certificate renewal
+
+Run renew script and restart app services:
+```bash
+cd ~/certbot
 ./renew-certs.sh
-popd
+
+cd ~
 docker compose restart
 ```
